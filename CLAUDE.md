@@ -93,4 +93,4 @@ Todo el código está en `src/`, agrupado por tipo de archivo. Cada capa importa
 - La sugerencia se pide con el título y la descripción unidos (`taskText`), así que basta con rellenar uno de los dos.
 - La respuesta de Gemini se valida con `isValidIceValue` aunque la petición incluya un `responseSchema` que exige enteros. No quites esa validación. Si cambias el prompt o el esquema, mantenlos coherentes.
 - `MIN_ICE_VALUE` y `MAX_ICE_VALUE` (`validateIceScore.ts`) controlan la validación y los sliders, pero el prompt de `aiIceService` escribe el rango «entre 1 y 10» como texto: si cambias el rango, actualiza también el prompt.
-- Prettier también revisa los `.md`: tras editar documentación, ejecuta `npm run format` o `npm run check` fallará.
+- Prettier también revisa los `.md`. El hook `PostToolUse` de `.claude/settings.json` (`.claude/hooks/formatear.sh`) ya formatea cada archivo que creas o editas con Edit o Write. Los archivos creados o modificados desde la terminal no pasan por el hook: formatéalos con `npm run format` o `npm run check` fallará.
