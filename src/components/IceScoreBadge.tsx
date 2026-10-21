@@ -1,22 +1,41 @@
 import { Chip } from '@mui/material';
 
+import { getIcePriority } from '../utils/getIcePriority';
+
+import type { IcePriority } from '../types/IceScore';
+import type { ChipProps } from '@mui/material';
+
+const PRIORITY_COLORS: Record<IcePriority, ChipProps['color']> = {
+  high: 'success',
+  low: 'error',
+  medium: 'warning',
+};
+
 interface IceScoreBadgeProps {
   score: number | null;
   muted?: boolean;
 }
 
-// formatIceScore muestra la puntuacion ICE con una precision estable, o un guion si aun no existe.
+// formatIceScore muestra la puntuación ICE con un decimal solo si hace falta, o un guion si aún no existe.
 function formatIceScore(score: number | null): string {
-  return score === null ? 'ICE —' : `ICE ${score.toFixed(1)}`;
+  return score === null ? 'ICE —' : `ICE ${Number(score.toFixed(1))}`;
 }
 
-// IceScoreBadge muestra la puntuacion ICE calculada.
-function IceScoreBadge({ score, muted = false }: IceScoreBadgeProps) {
-  const isHighlighted = score !== null && !muted;
+// getBadgeColor devuelve el color del tema según la prioridad, o gris si no hay puntuación o está atenuada.
+function getBadgeColor(
+  score: number | null,
+  muted: boolean,
+): ChipProps['color'] {
+  return score === null || muted
+    ? 'default'
+    : PRIORITY_COLORS[getIcePriority(score)];
+}
 
+// IceScoreBadge muestra la puntuación ICE con el color de su prioridad.
+function IceScoreBadge({ score, muted = false }: IceScoreBadgeProps) {
   return (
     <Chip
-      color={isHighlighted ? 'primary' : 'default'}
+      color={getBadgeColor(score, muted)}
       label={formatIceScore(score)}
       size="small"
       sx={{ fontWeight: 700 }}
